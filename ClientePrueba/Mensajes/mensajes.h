@@ -1,13 +1,12 @@
 /*
- * Cliente.h
+ * mensajes.h
  *
- *  Created on: 20 abr. 2019
+ *  Created on: 24 abr. 2019
  *      Author: utnso
  */
 
-#ifndef CLIENTE_H_
-#define CLIENTE_H_
-
+#ifndef MENSAJES_H_
+#define MENSAJES_H_
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -22,9 +21,17 @@
 #include<netdb.h>
 #include<readline/readline.h>
 #include<readline/history.h>
-#include"Mensajes/mensajes.h"
+
+typedef struct{
+
+	int size;
+	void* buffer;
+
+}t_stream;
+
+void* serializar_mensaje(t_stream* bufferA_serializar, int bytes);
+void mandar_mensaje(int conexion);
+void eliminar_tStream(t_stream* tStream);
 
 
-int conectar_servidor(void);
-
-#endif /* CLIENTE_H_ */
+#endif /* MENSAJES_H_ */

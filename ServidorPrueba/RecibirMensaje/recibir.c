@@ -7,55 +7,86 @@
 
 #include"recibir.h"
 
-char* recibir_mensaje(int conexion){
+void* recibir_buffer(int* size, int conexion){
 
-	int size;
-	char* buffer = malloc(11);
+	void* buffer;
 
-	if((size = recv(conexion,buffer,10,0)) == -1){
-		perror("No recibi el mensaje");
-		exit(1);
+	if(recv(conexion,size,sizeof(int),MSG_WAITALL) == -1){
+		perror("Fallo al recibir el tamanio.");
 	}
 
-	buffer[size] = '\0';
+	buffer = malloc(*size);
+
+	if(recv(conexion,buffer,*size,MSG_WAITALL) == -1){
+		perror("Fallo al recibir el mensaje");
+	}
 
 	return buffer;
 
 }
 
+cod_op determinar_operacion(char* buffer){
+
+	int size = strlen(buffer);
+
+	char* aux = malloc(size+1);
+	memcpy(aux,buffer,size);
+	aux[size + 1] = '\0';
+	memcpy(aux,buffer,size);
+
+	int i;
+
+	for(i = 0; i<size; i++){
+		aux [i] = toupper(aux[i]);
+	}
+
+	switch(strcmp(aux,"EXIT")){
+
+		case 0:
+			free(aux);
+			return DESCONEXION;
+			break;
+		default:
+			free(aux);
+			return MENSAJE;
+	}
+
+}
+
 void desconectar_cliente(int conexion){
 
-	if(send(conexion,"[Servidor] Bye!\n",16,0) == -1){
-		perror("No pude mandar bye");
-	}
-
-	printf("[Servidor] Cliente %d desconectado\n",conexion);
 	close(conexion);
+	printf("Cliente Desconectado");
 
+	exit(EXIT_SUCCESS);
 }
 
 
-void pedir_nueva_accion(int conexion){
+void recibir_mensaje(int conexion){
 
-	if(send(conexion,"[Servidor] Mandame un mensaje de hasta 10 caracteres.\n",54,0) == -1){
-		perror("Error al pedir que te mande un mensaje!");
-		exit(1);
+	int size;
+	char* buffer;
+
+	buffer = recibir_buffer(&size,conexion);
+
+	buffer[size] = '\0';
+
+	switch(determinar_operacion(buffer)){
+
+		case MENSAJE:
+			printf("Mensaje : %s \n",buffer);
+			break;
+		case DESCONEXION:
+			desconectar_cliente(conexion);
+			break;
+		default:
+			printf("No deberia haber entrado aca por ahora\n\n");
+			exit(1);
 	}
 
+	free(buffer);
 
 }
 
-void imprimir_mensaje(char* buffer){
 
-	printf("%s\n",buffer);
 
-}
-
-void notificar_llegada(int conexion){
-
-	if(send(conexion,"[Servidor] Me llego!\n",21,0) == -1){
-		perror("no le notifique que me llego");
-		exit(1);
-	}
-
-}

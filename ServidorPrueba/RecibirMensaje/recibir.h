@@ -20,17 +20,16 @@
 #include<sys/types.h>
 #include<netdb.h>
 #include<signal.h>
+#include<ctype.h>
 
 typedef enum{
-	ERROR = -1,
 	DESCONEXION,
 	MENSAJE
 }cod_op;
 
-char* recibir_mensaje(int conexion);
-void pedir_nueva_accion(int conexion);
+void recibir_mensaje(int conexion);
+void* recibir_buffer(int* size,int conexion);
+cod_op determinar_operacion(char* buffer);
 void desconectar_cliente(int conexion);
-void imprimir_mensaje(char* buffer);
-void notificar_llegada(int conexion);
 
 #endif /* RECIBIR_H_ */

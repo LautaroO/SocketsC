@@ -1,3 +1,5 @@
-Cliente.o: ../Cliente.c ../Cliente.h
+Cliente.o: ../Cliente.c ../Cliente.h ../Mensajes/mensajes.h
 
 ../Cliente.h:
+
+../Mensajes/mensajes.h:
