@@ -13,8 +13,10 @@
 #include<string.h>
 #include"IniciarServer/LevantarServer.h"
 #include"RecibirMensaje/recibir.h"
+#include"Select/administrar.h"
 #include<sys/select.h>
 #include<sys/time.h>
+
 
 void pedir_nueva_accion(int conexion);
 

@@ -56,13 +56,12 @@ cod_op determinar_operacion(char* buffer){
 void desconectar_cliente(int conexion){
 
 	close(conexion);
-	printf("Cliente Desconectado");
+	printf("Cliente %d Desconectado\n", conexion);
 
-	exit(EXIT_SUCCESS);
 }
 
 
-void recibir_mensaje(int conexion){
+void recibir_mensaje(int conexion, fd_set* master){
 
 	int size;
 	char* buffer;
@@ -74,10 +73,11 @@ void recibir_mensaje(int conexion){
 	switch(determinar_operacion(buffer)){
 
 		case MENSAJE:
-			printf("Mensaje : %s \n",buffer);
+			printf("[Cliente %d] Mensaje : %s \n",conexion,buffer);
 			break;
 		case DESCONEXION:
 			desconectar_cliente(conexion);
+			FD_CLR(conexion,master);
 			break;
 		default:
 			printf("No deberia haber entrado aca por ahora\n\n");

@@ -18,6 +18,7 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include<sys/types.h>
+#include<sys/time.h>
 #include<netdb.h>
 #include<signal.h>
 #include<ctype.h>
@@ -27,7 +28,7 @@ typedef enum{
 	MENSAJE
 }cod_op;
 
-void recibir_mensaje(int conexion);
+void recibir_mensaje(int conexion,fd_set* master);
 void* recibir_buffer(int* size,int conexion);
 cod_op determinar_operacion(char* buffer);
 void desconectar_cliente(int conexion);

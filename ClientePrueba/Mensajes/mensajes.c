@@ -14,13 +14,10 @@ void* serializar_mensaje(t_stream* bufferA_serializar, int bytes){
 
 	memcpy(msg_Ser + desplazamiento,&(bufferA_serializar->size),sizeof(int));
 	desplazamiento += sizeof(int);
+	//4 .
 	memcpy(msg_Ser + desplazamiento,bufferA_serializar->buffer,bufferA_serializar->size);
 	desplazamiento += bufferA_serializar->size;
-
-	if(desplazamiento == bytes){
-		printf("Desplazamiento = bytes!\n");
-	}
-
+	//4hola
 	return msg_Ser;
 }
 
@@ -35,6 +32,7 @@ void mandar_mensaje(int conexion){
 	memcpy(bufferA_serializar->buffer,buffer,bufferA_serializar->size);
 
 	void* buffer_serializado;
+	//tamaño + mensaje
 	int bytes = sizeof(int) + bufferA_serializar->size;
 
 	buffer_serializado = serializar_mensaje(bufferA_serializar, bytes);
