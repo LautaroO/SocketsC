@@ -17,10 +17,14 @@ int main(void){
 
 		printf("Mandale un nuevo mensaje:\n ");
 
-		mandar_mensaje(conexion);
+		if(!mandar_mensaje(conexion)){
+			printf("Te desconectaste! \n");
+			break;
+		}
 
 	}
 
+	close(conexion);
 	return EXIT_SUCCESS;
 }
 

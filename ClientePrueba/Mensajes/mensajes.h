@@ -30,7 +30,7 @@ typedef struct{
 }t_stream;
 
 void* serializar_mensaje(t_stream* bufferA_serializar, int bytes);
-void mandar_mensaje(int conexion);
+int mandar_mensaje(int conexion);
 void eliminar_tStream(t_stream* tStream);
 
 

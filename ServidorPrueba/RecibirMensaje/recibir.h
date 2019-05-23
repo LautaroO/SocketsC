@@ -28,9 +28,9 @@ typedef enum{
 	MENSAJE
 }cod_op;
 
-void recibir_mensaje(int conexion,fd_set* master);
-void* recibir_buffer(int* size,int conexion);
-cod_op determinar_operacion(char* buffer);
+void recibir_mensaje(int size,int conexion);
+void* recibir_buffer(int size,int conexion);
+cod_op determinar_operacion(int* size, int conexion);
 void desconectar_cliente(int conexion);
 
 #endif /* RECIBIR_H_ */

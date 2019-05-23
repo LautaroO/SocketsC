@@ -7,53 +7,38 @@
 
 #include"recibir.h"
 
-void* recibir_buffer(int* size, int conexion){
+void* recibir_buffer(int size, int conexion){
 
 	void* buffer;
 
-	if(recv(conexion,size,sizeof(int),MSG_WAITALL) == -1){
-		perror("Fallo al recibir el tamanio.");
-	}
+	buffer = malloc(size);
 
-	buffer = malloc(*size);
-
-	if(recv(conexion,buffer,*size,MSG_WAITALL) == -1){
-		perror("Fallo al recibir el mensaje");
-	}
+	if(recv(conexion,buffer,size,MSG_WAITALL) == -1){
+			perror("Fallo al recibir el mensaje");
+		}
 
 	return buffer;
 
 }
 
-cod_op determinar_operacion(char* buffer){
+cod_op determinar_operacion(int* size, int conexion){
 
-	int size = strlen(buffer);
+	int bytes = recv(conexion,size,sizeof(int),MSG_WAITALL);
 
-	char* aux = malloc(size+1);
-	memcpy(aux,buffer,size);
-	aux[size + 1] = '\0';
-	memcpy(aux,buffer,size);
-
-	int i;
-
-	for(i = 0; i<size; i++){
-		aux [i] = toupper(aux[i]);
+	if(bytes == -1){
+			perror("Fallo al recibir el tamanio.");
+			exit(1);
+		}
+	else if(bytes == 0){
+		return DESCONEXION;
 	}
-
-	switch(strcmp(aux,"EXIT")){
-
-		case 0:
-			free(aux);
-			return DESCONEXION;
-			break;
-		default:
-			free(aux);
-			return MENSAJE;
+	else{
+		return MENSAJE;
 	}
-
 }
 
 void desconectar_cliente(int conexion){
+
 
 	close(conexion);
 	printf("Cliente %d Desconectado\n", conexion);
@@ -61,31 +46,17 @@ void desconectar_cliente(int conexion){
 }
 
 
-void recibir_mensaje(int conexion, fd_set* master){
+void recibir_mensaje(int size, int conexion){
 
-	int size;
 	char* buffer;
 
-	buffer = recibir_buffer(&size,conexion);
+	buffer = recibir_buffer(size, conexion);
 
 	buffer[size] = '\0';
 
-	switch(determinar_operacion(buffer)){
-
-		case MENSAJE:
-			printf("[Cliente %d] Mensaje : %s \n",conexion,buffer);
-			break;
-		case DESCONEXION:
-			desconectar_cliente(conexion);
-			FD_CLR(conexion,master);
-			break;
-		default:
-			printf("No deberia haber entrado aca por ahora\n\n");
-			exit(1);
-	}
+	printf("Mensaje: %s\n", buffer);
 
 	free(buffer);
-
 }
 
 

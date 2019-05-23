@@ -21,15 +21,21 @@ void* serializar_mensaje(t_stream* bufferA_serializar, int bytes){
 	return msg_Ser;
 }
 
-void mandar_mensaje(int conexion){
+int mandar_mensaje(int conexion){
 
 	char* buffer = readline(">>");
+
+	if(!strcmp(buffer, "exit")){
+		return 0;
+	}
 
 	t_stream* bufferA_serializar = malloc(sizeof(t_stream));
 
 	bufferA_serializar->size = strlen(buffer) + 1;
 	bufferA_serializar->buffer = malloc(bufferA_serializar->size);
 	memcpy(bufferA_serializar->buffer,buffer,bufferA_serializar->size);
+
+	free(buffer);
 
 	void* buffer_serializado;
 	//tamaño + mensaje
@@ -41,6 +47,8 @@ void mandar_mensaje(int conexion){
 
 	free(buffer_serializado);
 	eliminar_tStream(bufferA_serializar);
+
+	return 1;
 
 }
 

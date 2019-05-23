@@ -30,7 +30,7 @@ int main(void){
 	while(1){
 
 		read_fds = master;
-		printf("Select esperando\n");
+		//printf("Select esperando\n");
 		if(select(fdmax + 1,&read_fds,NULL,NULL,NULL) == -1){
 			perror("Select");
 			exit(1);
@@ -48,7 +48,23 @@ int main(void){
 				}
 				else{
 					//printf("Prueba nuevo mensaje : i = %d\n",i);
-					recibir_mensaje(i,&master);
+					//recibir_mensaje(i,&master);
+					int size;
+
+					switch(determinar_operacion(&size, i)){
+						case MENSAJE:
+							recibir_mensaje(size, i);
+							break;
+						case DESCONEXION:
+							desconectar_cliente(i);
+							FD_CLR(i,&master);
+							break;
+						default:
+							printf("pene\n");
+							break;
+					}
+
+
 				}
 			}
 
