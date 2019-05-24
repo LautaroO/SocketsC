@@ -16,8 +16,10 @@
 #include"Select/administrar.h"
 #include<sys/select.h>
 #include<sys/time.h>
+#include<pthread.h>
 
 
 void pedir_nueva_accion(int conexion);
+void gestionar_request(int conexion);
 
 #endif /* SERVIDOR_H_ */
